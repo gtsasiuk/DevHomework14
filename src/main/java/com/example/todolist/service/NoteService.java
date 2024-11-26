@@ -1,6 +1,7 @@
 package com.example.todolist.service;
 
 import com.example.todolist.model.Note;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -50,5 +51,12 @@ public class NoteService {
             id = random.nextLong();
         } while (notes.containsKey(id));
         return id;
+    }
+
+    @PostConstruct
+    public void init() {
+        add(new Note(null, "First Note", "This is the content of the first note."));
+        add(new Note(null, "Second Note", "This is the content of the second note."));
+        add(new Note(null, "Third Note", "This is the content of the third note."));
     }
 }
