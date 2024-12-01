@@ -1,62 +1,43 @@
 package com.example.todolist.service;
 
 import com.example.todolist.model.Note;
+import com.example.todolist.repository.NoteRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class NoteService {
-    private final Map<Long, Note> notes = new HashMap<Long, Note>();
-    private final Random random = new Random();
+    private final NoteRepository noteRepository;
 
     public List<Note> listAll() {
-        return new ArrayList<Note>(notes.values());
+        return noteRepository.findAll();
     }
 
     public Note add(Note note) {
-        long id = generateUniqueId();
-        note.setId(id);
-        notes.put(id, note);
-        return note;
+        return noteRepository.save(note);
     }
 
     public void deleteById(long id) {
-        if (!notes.containsKey(id)) {
-            throw new NoSuchElementException("Note with ID " + id + " not found");
-        }
-        notes.remove(id);
+        noteRepository.deleteById(id);
     }
 
     public void update(Note note) {
-        if (!notes.containsKey(note.getId())) {
-            throw new NoSuchElementException("Note with ID " + note.getId() + " not found");
-        }
-        Note existingNote = notes.get(note.getId());
-        existingNote.setTitle(note.getTitle());
-        existingNote.setContent(note.getContent());
+        noteRepository.save(note);
     }
 
     public Note getById(long id) {
-        if (!notes.containsKey(id)) {
-            throw new NoSuchElementException("Note with ID " + id + " not found");
-        }
-        return notes.get(id);
-    }
-
-    private long generateUniqueId() {
-        long id;
-        do {
-            id = random.nextLong();
-        } while (notes.containsKey(id));
-        return id;
+        return noteRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Note with ID " + id + " not found"));
     }
 
     @PostConstruct
     public void init() {
-        add(new Note(null, "First Note", "This is the content of the first note."));
-        add(new Note(null, "Second Note", "This is the content of the second note."));
-        add(new Note(null, "Third Note", "This is the content of the third note."));
+        add(new Note(1L, "First Note", "This is the content of the first note."));
+        add(new Note(2L, "Second Note", "This is the content of the second note."));
+        add(new Note(3L, "Third Note", "This is the content of the third note."));
     }
 }
