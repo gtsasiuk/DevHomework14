@@ -14,7 +14,6 @@ import java.util.NoSuchElementException;
 @RequestMapping("/note")
 @RequiredArgsConstructor
 public class NoteController {
-
     private final NoteService noteService;
 
     @GetMapping("/list")
