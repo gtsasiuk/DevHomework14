@@ -33,11 +33,4 @@ public class NoteService {
         return noteRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Note with ID " + id + " not found"));
     }
-
-    @PostConstruct
-    public void init() {
-        add(new Note(1L, "First Note", "This is the content of the first note."));
-        add(new Note(2L, "Second Note", "This is the content of the second note."));
-        add(new Note(3L, "Third Note", "This is the content of the third note."));
-    }
 }

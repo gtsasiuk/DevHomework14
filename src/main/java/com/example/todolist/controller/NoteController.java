@@ -16,21 +16,23 @@ import java.util.NoSuchElementException;
 public class NoteController {
     private final NoteService noteService;
 
+    @PostMapping("/create")
+    public String createNote(@ModelAttribute Note note) {
+        noteService.add(note);
+        return "redirect:/note/list";
+    }
+
+    @GetMapping("/create")
+    public String getCreateNotePage(Model model) {
+        model.addAttribute("note", new Note());
+        return "note/create";
+    }
+
     @GetMapping("/list")
     public String getAllNotes(Model model) {
         List<Note> notes = noteService.listAll();
         model.addAttribute("notes", notes);
         return "note/list";
-    }
-
-    @PostMapping("/delete")
-    public String deleteNote(@RequestParam Long id) {
-        try {
-            noteService.deleteById(id);
-        } catch (NoSuchElementException e) {
-            return "redirect:/note/list?error=Note+not+found";
-        }
-        return "redirect:/note/list";
     }
 
     @GetMapping("/edit")
@@ -53,4 +55,15 @@ public class NoteController {
         }
         return "redirect:/note/list";
     }
+
+    @PostMapping("/delete")
+    public String deleteNote(@RequestParam Long id) {
+        try {
+            noteService.deleteById(id);
+        } catch (NoSuchElementException e) {
+            return "redirect:/note/list?error=Note+not+found";
+        }
+        return "redirect:/note/list";
+    }
+
 }
